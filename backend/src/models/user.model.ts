@@ -12,7 +12,6 @@ interface IAddress {
 }
 
 interface IUser extends Document {
-  username: string;
   email: string;
   password: string;
   addresses: IAddress[];
@@ -34,7 +33,6 @@ const addressesSchema = new Schema<IAddress>({
 
 const userSchema = new Schema<IUser>(
   {
-    username: { type: String, required: true },
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true, select:false },
     addresses: { type: [addressesSchema], default: [], required: true },

@@ -1,0 +1,34 @@
+# Dependencies
+node_modules/
+
+# TypeScript compiled output
+dist/
+build/
+
+# Environment variables
+.env
+.env.local
+.env.development
+.env.production
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE / Editor
+.vscode/
+.idea/
+
+.claude
+
+# Testing
+coverage/
+
+# React build output (如果有前端)
+frontend/build/
+frontend/dist/
