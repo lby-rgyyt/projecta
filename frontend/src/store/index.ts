@@ -8,5 +8,11 @@ export const store = configureStore({
   },
 });
 
+export const selectTotalPrice = (state: RootState) =>
+  state.cart.items.reduce(
+    (sum, item) => sum + item.productId.price * item.quantity,
+    0,
+  );
+
 export type RootState = ReturnType<typeof store.getState>;
 export type AppDispatch = typeof store.dispatch;

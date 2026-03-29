@@ -3,8 +3,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import type { RootState } from "../store";
 import { setCart } from "../store/slices/cartSlice";
-import type { CartItem } from "../store/slices/cartSlice";
-import type { Product } from "../types";
+import type { Product, CartItem } from "../types";
 
 export const useCart = (product: Product) => {
   const dispatch = useDispatch();
@@ -12,6 +11,7 @@ export const useCart = (product: Product) => {
   const items = useSelector((state: RootState) => state.cart.items);
   const token = useSelector((state: RootState) => state.auth.token);
   const cartItem = items.find((item) => item.productId._id === product._id);
+
   const updateCart = async (newItems: CartItem[]) => {
     // cart model only has productId
     const toBackend = newItems.map((item) => ({
@@ -28,6 +28,7 @@ export const useCart = (product: Product) => {
     });
     dispatch(setCart(res.data.cart.items));
   };
+
   const handleAdd = async () => {
     if (!token) {
       navigate("/signin");
@@ -36,12 +37,7 @@ export const useCart = (product: Product) => {
     const newItems = [
       ...items,
       {
-        productId: {
-          _id: product._id,
-          name: product.name,
-          price: product.price,
-          image: product.image,
-        },
+        productId: product,
         quantity: 1,
       },
     ];
@@ -51,6 +47,7 @@ export const useCart = (product: Product) => {
       console.error(err);
     }
   };
+
   const handleIncrease = async () => {
     if (!token) return;
     const newItems = items.map((item) =>
@@ -64,6 +61,7 @@ export const useCart = (product: Product) => {
       console.error(err);
     }
   };
+
   const handleDecrease = async () => {
     if (!token) return;
     const newItems = items
@@ -79,5 +77,15 @@ export const useCart = (product: Product) => {
       console.error(err);
     }
   };
-  return { cartItem, handleAdd, handleIncrease, handleDecrease };
+
+  const handleRemove = async () => {
+    if (!token) return;
+    const newItems = items.filter((item) => item.productId._id !== product._id);
+    try {
+      updateCart(newItems);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+  return { cartItem, handleAdd, handleIncrease, handleDecrease, handleRemove };
 };

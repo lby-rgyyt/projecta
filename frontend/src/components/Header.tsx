@@ -1,17 +1,20 @@
 import { useSelector, useDispatch } from "react-redux";
 import { signout } from "../store/slices/authSlice";
 import { useNavigate, Link } from "react-router-dom";
+import { useState } from "react";
 import type { RootState } from '../store'
+import { selectTotalPrice } from "../store";
+import CartModal from "./CartModal";
 
 const Header = () => {
   const token = useSelector((state: RootState) => state.auth.token);
-  const items = useSelector((state: RootState) => state.cart.items)
+  // const items = useSelector((state: RootState) => state.cart.items)
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  const totalPrice = items.reduce((sum, item) => {
-    return sum + item.productId.price * item.quantity
-  }, 0);
+  const [isCartOpen,setIsCartOpen] = useState(false);
+
+  const totalPrice = useSelector(selectTotalPrice)
 
   const handleSignOut = () => {
     dispatch(signout());
@@ -27,6 +30,8 @@ const Header = () => {
         ) : (
           <Link to="/signin">Sign In</Link>
         )}
+        <button onClick={() => setIsCartOpen(true)}>Cart</button>
+        {isCartOpen && <CartModal onClose={() => setIsCartOpen(false)} />}
         <p>{totalPrice}</p>
       </nav>
     </header>
