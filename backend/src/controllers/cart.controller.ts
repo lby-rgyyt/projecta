@@ -16,7 +16,7 @@ export const getCart = async (
     if (!cart) {
       cart = await Cart.create({ userId, items: [] });
     }
-    res.status(200).json({ success: true, data: cart });
+    res.status(200).json({ success: true, cart: cart });
   } catch (err) {
     next(err);
   }
@@ -38,7 +38,7 @@ export const updateCart = async (
       { items: filteredItems },
       { upsert: true, new: true },
     );
-    res.status(200).json({ success: true, data: cart });
+    res.status(200).json({ success: true, cart: cart });
   } catch (err) {
     next(err);
   }

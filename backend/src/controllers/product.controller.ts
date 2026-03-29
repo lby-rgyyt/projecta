@@ -8,8 +8,10 @@ export const createProduct = async (
   next: NextFunction,
 ): Promise<void> => {
   try {
-    const { name, description, price, category, inventory, sku, image } =
-      req.body;
+    const { name, description, price, category, inventory, image } = req.body;
+
+    // temp
+    const sku = `SKU-${Date.now()}`;
 
     const createdBy = new mongoose.Types.ObjectId(req.user!.id);
     const product = await Product.create({
@@ -46,7 +48,7 @@ export const getProduct = async (
     }
     res.status(200).json({
       success: true,
-      data: product,
+      product: product,
     });
   } catch (err) {
     next(err);
@@ -64,13 +66,19 @@ export const getListProducts = async (
     const skip = (page - 1) * limit;
     const filter = req.query.category ? { category: req.query.category } : {};
 
+    const sort: Record<string, 1 | -1> =
+      req.query.sort === "price_asc"
+        ? { price: 1 }
+        : req.query.sort === "price_desc"
+          ? { price: -1 }
+          : { createdAt: -1 };
     const [products, total] = await Promise.all([
-      Product.find(filter).sort({ createdAt: -1 }).skip(skip).limit(limit),
+      Product.find(filter).sort(sort).skip(skip).limit(limit),
       Product.countDocuments(filter),
     ]);
     res.status(200).json({
       success: true,
-      data: products,
+      products: products,
       total,
       page,
       totalPages: Math.ceil(total / limit),
@@ -113,7 +121,7 @@ export const updateProduct = async (
     const updated = await Product.findByIdAndUpdate(req.params.id, updates, {
       new: true,
     });
-    res.status(200).json({ success: true, data: updated });
+    res.status(200).json({ success: true, product: updated });
   } catch (err) {
     next(err);
   }
