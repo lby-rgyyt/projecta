@@ -29,6 +29,6 @@ Thumbs.db
 # Testing
 coverage/
 
-# React build output (如果有前端)
+# React build output
 frontend/build/
 frontend/dist/
