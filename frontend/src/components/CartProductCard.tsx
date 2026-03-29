@@ -24,7 +24,7 @@ const CartProductCard = ({ product }:Props) => {
           <span>{cartItem!.quantity}</span>
           <button onClick={() => handleIncrease()}>+</button>
         </div>
-        <button onClick={() => handleRemove()}>+</button>
+        <button onClick={() => handleRemove()}>Remove</button>
   </div>;
 };
 

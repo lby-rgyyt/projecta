@@ -1,6 +1,8 @@
 import { Link } from "react-router-dom";
 import type { Product } from "../types";
 import { useCart } from "../hooks/useCart";
+import { useSelector } from "react-redux";
+import type { RootState } from "../store";
 
 interface Props {
   product: Product;
@@ -9,6 +11,8 @@ interface Props {
 const ProductCard = ({ product }: Props) => {
   const { cartItem, handleAdd, handleIncrease, handleDecrease } =
     useCart(product);
+
+  const role = useSelector((state: RootState) => state.auth.user?.role);
 
   return (
     <div>
@@ -29,6 +33,9 @@ const ProductCard = ({ product }: Props) => {
         </div>
       ) : (
         <button onClick={() => handleAdd()}>Add</button>
+      )}
+      {role === "vendor" && (
+        <Link to={`/products/edit/${product._id}`}>Edit</Link>
       )}
     </div>
   );

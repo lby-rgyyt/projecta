@@ -24,7 +24,6 @@ const Header = () => {
     <header>
       <Link to="/">Management</Link>
       <nav>
-        <Link to="/cart">Cart</Link>
         {token ? (
           <button onClick={handleSignOut}>Sign Out</button>
         ) : (

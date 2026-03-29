@@ -1,15 +1,25 @@
-import { useState } from "react";
+import { useState,useEffect } from "react";
 import type { SubmitEvent } from "react";
 import axios from "axios";
-import { useDispatch } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
 import { setCredentials } from "../store/slices/authSlice";
+import type { RootState } from "../store";
 
 const SignInPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
+  const token = useSelector((state: RootState) => state.auth.token);
+  const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  useEffect(() => {
+    if (token) {
+      navigate("/products", { replace: true })
+    }
+  }, [token, navigate])
 
   const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();

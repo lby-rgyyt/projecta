@@ -1,8 +1,10 @@
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { useState, useEffect } from "react";
 import axios from "axios";
 import type { Product } from "../types";
 import { useCart } from "../hooks/useCart";
+import { useSelector } from "react-redux";
+import type { RootState } from "../store";
 
 const ProductDetailPage = () => {
   const { id } = useParams();
@@ -18,6 +20,8 @@ const ProductDetailPage = () => {
       inventory: 0,
     },
   );
+
+  const role = useSelector((state: RootState) => state.auth.user?.role);
 
   useEffect(() => {
     const fetchProdcut = async () => {
@@ -58,15 +62,20 @@ const ProductDetailPage = () => {
         </div>
         <p>{product.description}</p>
       </div>
-      {cartItem ? (
-        <div>
-          <button onClick={() => handleDecrease()}>-</button>
-          <span>{cartItem.quantity}</span>
-          <button onClick={() => handleIncrease()}>+</button>
-        </div>
-      ) : (
-        <button onClick={() => handleAdd()}>Add</button>
-      )}
+      <div>
+        {cartItem ? (
+          <div>
+            <button onClick={() => handleDecrease()}>-</button>
+            <span>{cartItem.quantity}</span>
+            <button onClick={() => handleIncrease()}>+</button>
+          </div>
+        ) : (
+          <button onClick={() => handleAdd()}>Add</button>
+        )}
+        {role === "vendor" && (
+          <Link to={`/products/edit/${product._id}`}>Edit</Link>
+        )}
+      </div>
     </div>
   );
 };
