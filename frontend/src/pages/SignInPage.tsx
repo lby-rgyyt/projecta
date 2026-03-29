@@ -1,29 +1,42 @@
 import { useState } from "react";
-import type { SubmitEvent } from 'react'
+import type { SubmitEvent } from "react";
 import axios from "axios";
+import { useDispatch } from "react-redux";
+import { setCredentials } from "../store/slices/authSlice";
 
 const SignInPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
 
+  const dispatch = useDispatch();
+
   const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
-    e.preventDefault()
+    e.preventDefault();
     try {
-        const response = await axios.post(`${import.meta.env.VITE_API_URL}/api/auth/login`, {
-            email,
-            password
-          })
-      console.log(response.data)
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/auth/login`,
+        {
+          email,
+          password,
+        },
+      );
+      dispatch(
+        setCredentials({
+          token: response.data.token,
+          user: response.data.user,
+        }),
+      );
+      console.log(response.data);
     } catch (error) {
-      console.error(error)
+      console.error(error);
     }
-  }
+  };
 
   return (
     <div>
       Sign In Page
-      <form onSubmit={handleSubmit}> 
+      <form onSubmit={handleSubmit}>
         <input
           type="text"
           value={email}
@@ -38,7 +51,7 @@ const SignInPage = () => {
             placeholder="Password"
           />
           <button type="button" onClick={() => setShowPassword(!showPassword)}>
-          {showPassword ? "Hide" : "Show"}
+            {showPassword ? "Hide" : "Show"}
           </button>
         </div>
         <button type="submit">Sign In</button>
