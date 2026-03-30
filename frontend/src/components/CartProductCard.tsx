@@ -1,31 +1,43 @@
-import { Link} from "react-router-dom";
+import { Link } from "react-router-dom";
 import type { Product } from "../types";
 import { useCart } from "../hooks/useCart";
 
-interface Props {
-    product: Product;
-  }
+import "../styles/CartModal.css";
 
-const CartProductCard = ({ product }:Props) => {
+interface Props {
+  product: Product;
+}
+
+const CartProductCard = ({ product }: Props) => {
   const { cartItem, handleRemove, handleIncrease, handleDecrease } =
     useCart(product);
-  return <div>
-    <Link to={`/products/${product._id}`}>
+  return (
+    <div className="cart-item">
+      <Link className="cart-item-image" to={`/products/${product._id}`}>
         {product.image.length > 0 ? (
           <img src={product.image[0]} alt={product.name} />
         ) : (
           <p>No image</p>
         )}
-        <p>{product.name}</p>
       </Link>
-      <p>${product.price}</p>
-      <div>
-          <button onClick={() => handleDecrease()}>-</button>
-          <span>{cartItem!.quantity}</span>
-          <button onClick={() => handleIncrease()}>+</button>
+      <div className="cart-item-info">
+        <div className="cart-item-top">
+          <p className="cart-item-name">{product.name}</p>
+          <p className="cart-item-price">${product.price.toFixed(2)}</p>
         </div>
-        <button onClick={() => handleRemove()}>Remove</button>
-  </div>;
+        <div className="cart-item-bottom">
+          <div className="cart-item-qty">
+            <button onClick={() => handleDecrease()}>–</button>
+            <span>{cartItem!.quantity}</span>
+            <button onClick={() => handleIncrease()}>+</button>
+          </div>
+          <button className="cart-item-remove" onClick={() => handleRemove()}>
+            Remove
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 };
 
 export default CartProductCard;

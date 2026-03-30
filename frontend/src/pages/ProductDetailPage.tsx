@@ -6,6 +6,8 @@ import { useCart } from "../hooks/useCart";
 import { useSelector } from "react-redux";
 import type { RootState } from "../store";
 
+import "../styles/ProductDetail.css";
+
 const ProductDetailPage = () => {
   const { id } = useParams();
   const [product, setProduct] = useState<Product | null>(null);
@@ -41,40 +43,43 @@ const ProductDetailPage = () => {
   if (!product) return <p>Loading...</p>;
 
   return (
-    <div>
-      Product Detail
-      <div>
-        {product.image.length > 0 ? (
-          <img src={product.image[0]} alt={product.name} />
-        ) : (
-          <p>No image</p>
-        )}
-      </div>
-      <div>
-        <p>{product.category}</p>
-        <div>
-          <p>{product.price}</p>
-          {product.inventory === 0 ? (
-            <p>Out of Stock</p>
+    <div className="detail-page">
+      <h1 className="detail-page-title">Products Detail</h1>
+      <div className="detail-card">
+        <div className="detail-image">
+          {product.image.length > 0 ? (
+            <img src={product.image[0]} alt={product.name} />
           ) : (
-            <p>{product.inventory}</p>
+            <p>No image</p>
           )}
         </div>
-        <p>{product.description}</p>
-      </div>
-      <div>
-        {cartItem ? (
-          <div>
-            <button onClick={() => handleDecrease()}>-</button>
-            <span>{cartItem.quantity}</span>
-            <button onClick={() => handleIncrease()}>+</button>
+        <div className="detail-info">
+          <p className="detail-category">{product.category}</p>
+          <h2 className="detail-name">{product.name}</h2>
+          <div className="detail-price-row">
+            <span className="detail-price">${product.price}</span>
+            {product.inventory === 0 ? (
+              <span className="detail-stock out">Out of Stock</span>
+            ) : (
+              <span className="detail-stock in">In Stock: {product.inventory}</span>
+            )}
           </div>
-        ) : (
-          <button onClick={() => handleAdd()}>Add</button>
-        )}
-        {role === "vendor" && (
-          <Link to={`/products/edit/${product._id}`}>Edit</Link>
-        )}
+          <p className="detail-description">{product.description}</p>
+          <div className="detail-actions">
+            {cartItem ? (
+              <div className="detail-qty">
+                <button onClick={() => handleDecrease()}>-</button>
+                <span>{cartItem.quantity}</span>
+                <button onClick={() => handleIncrease()}>+</button>
+              </div>
+            ) : (
+              <button className="detail-add-btn" onClick={() => handleAdd()}>Add To Cart</button>
+            )}
+            {role === "vendor" && (
+              <Link className="detail-edit-btn" to={`/products/edit/${product._id}`}>Edit</Link>
+            )}
+          </div>
+        </div>
       </div>
     </div>
   );

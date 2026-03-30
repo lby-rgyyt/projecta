@@ -2,6 +2,9 @@ import { useState } from "react";
 import type { SubmitEvent } from "react";
 // import axios from "axios";
 
+import { MdOutlineMarkEmailRead } from "react-icons/md";
+import "../styles/SignInSignUp.css";
+
 const UpdatePasswordPage = () => {
   const [email, setEmail] = useState("");
   const [submitted, setSubmitted] = useState(false);
@@ -12,26 +15,38 @@ const UpdatePasswordPage = () => {
   };
 
   return (
-    <div>
-      {submitted ? (
-        <p>
-          We have sent the update password link to your email, please check
-          that!
-        </p>
-      ) : (
-        <>
-          <p>Update your password</p>
-          <form onSubmit={handleSubmit}>
-            <input
-              type="text"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              placeholder="Email"
-            />
-            <button type="submit">Update Password</button>
-          </form>
-        </>
-      )}
+    <div className="signin-page">
+      <div className="signin-card">
+        {submitted ? (
+          <div className="password-sent">
+            <MdOutlineMarkEmailRead size={48} color="#5048e5" />
+            <p>
+              We have sent the update password link to your email, please check
+              that !
+            </p>
+          </div>
+        ) : (
+          <>
+            <h2 className="signin-title">Update your password</h2>
+            <p className="signin-subtitle">
+              Enter your email link, we will send you the recovery link
+            </p>
+            <form onSubmit={handleSubmit}>
+              <div className="form-group">
+                <label>Email</label>
+                <input
+                  type="text"
+                  value={email}
+                  onChange={(e) => setEmail(e.target.value)}
+                />
+              </div>
+              <button type="submit" className="signin-btn">
+                Update Password
+              </button>
+            </form>
+          </>
+        )}
+      </div>
     </div>
   );
 };

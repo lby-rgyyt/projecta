@@ -6,6 +6,8 @@ import { useNavigate } from "react-router-dom";
 import { useSelector } from "react-redux";
 import type { RootState } from "../store";
 
+import "../styles/ProductForm.css";
+
 const ProductForm = ({
   mode,
   id,
@@ -98,75 +100,91 @@ const ProductForm = ({
   const handleUpload = () => {
     setPreviewUrl(imageUrl);
   };
-  if(!token){
+  if (!token) {
     return;
   }
+
   return (
-    <div>
-      <h1>{mode === "create" ? "Create Product" : "Edit Product"}</h1>
-      <form onSubmit={handleSubmit}>
-        <div>
-          Product name
+    <div className="product-page">
+      <h1 className="product-page-title">
+        {mode === "create" ? "Create Product" : "Edit Product"}
+      </h1>
+      <form className="product-form" onSubmit={handleSubmit}>
+        <div className="form-group">
+          <label>Product name</label>
           <input
             type="text"
             value={name}
             onChange={(e) => setName(e.target.value)}
           />
         </div>
-        <div>
-          Product Description
+        <div className="form-group">
+          <label>Product Description</label>
           <textarea
             value={description}
             onChange={(e) => setDescription(e.target.value)}
           />
         </div>
-        <div>
-          Category
-          <select
-            value={category}
-            onChange={(e) => setCategory(e.target.value)}
-          >
-            <option value="Category1">Category1</option>
-            <option value="Category2">Category2</option>
-          </select>
+        <div className="form-row">
+          <div className="form-group">
+            <label>Category</label>
+            <select
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+            >
+              <option value="Category1">Category1</option>
+              <option value="Category2">Category2</option>
+            </select>
+          </div>
+          <div className="form-group">
+            <label>Price</label>
+            <input
+              type="number"
+              min={0}
+              value={price}
+              onChange={(e) => setPrice(Number(e.target.value))}
+            />
+          </div>
         </div>
-        <div>
-          Price
-          <input
-            type="number"
-            min={0}
-            value={price}
-            onChange={(e) => setPrice(Number(e.target.value))}
-          />
+        <div className="form-row">
+          <div className="form-group">
+            <label>In Stock Quantity</label>
+            <input
+              type="number"
+              min={0}
+              value={inventory}
+              onChange={(e) => setInventory(Number(e.target.value))}
+            />
+          </div>
+          <div className="form-group form-group-image">
+            <label>Add Image Link</label>
+            <div className="image-input">
+              <input
+                type="text"
+                value={imageUrl}
+                onChange={(e) => setImageUrl(e.target.value)}
+                placeholder="http://"
+              />
+              <button
+                type="button"
+                className="upload-btn"
+                onClick={handleUpload}
+              >
+                Upload
+              </button>
+            </div>
+          </div>
         </div>
-        <div>
-          In Stock Quantity
-          <input
-            type="number"
-            min={0}
-            value={inventory}
-            onChange={(e) => setInventory(Number(e.target.value))}
-          />
-        </div>
-        <div>
-          Add Image Link
-          <input
-            type="text"
-            value={imageUrl}
-            onChange={(e) => setImageUrl(e.target.value)}
-          />
-          <button type="button" onClick={handleUpload}>
-            Upload
-          </button>
-        </div>
-        <div>
+        <div className="image-preview">
           {previewUrl ? (
             <img src={previewUrl} alt="preview" />
           ) : (
             <p>image preview!</p>
           )}
         </div>
-        <button type="submit">{mode==='create'? ("Add Product"):("Save")}</button>
+        <button type="submit" className="product-submit-btn">
+          {mode === "create" ? "Add Product" : "Save"}
+        </button>
       </form>
     </div>
   );

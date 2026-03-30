@@ -1,18 +1,22 @@
+import { FaYoutube, FaTwitter, FaFacebookSquare } from "react-icons/fa";
+import "../styles/Footer.css";
+
 const Footer = () => {
   return (
     <footer>
       <p>©2022 All Rights Reserved.</p>
-      <div>
+      <div className="footer-socials">
         <a href="https://youtube.com" target="_blank">
-          YouTube
+          <FaYoutube size={20} />
         </a>
         <a href="https://twitter.com" target="_blank">
-          Twitter
+          <FaTwitter size={20} />
         </a>
         <a href="https://facebook.com" target="_blank">
-          Facebook
+          <FaFacebookSquare size={20} />
         </a>
       </div>
+
       <nav>
         <a href="#">Contact us</a>
         <a href="#">Privacy Policies</a>
