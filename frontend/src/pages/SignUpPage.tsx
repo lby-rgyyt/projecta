@@ -1,7 +1,7 @@
 import { useState } from "react";
 import type { SubmitEvent } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
+import { useNavigate, Link } from "react-router-dom";
 
 import "../styles/SignInSignUp.css";
 
@@ -12,6 +12,8 @@ const SignUpPage = () => {
 
   const [emailError, setEmailError] = useState("");
   const [passwordError, setPasswordError] = useState("");
+
+  const navigate = useNavigate();
 
   const validate = () => {
     let valid = true;
@@ -42,6 +44,7 @@ const SignUpPage = () => {
         },
       );
       console.log(response.data);
+      navigate('/signin');
     } catch (error) {
       if (axios.isAxiosError(error) && error.response) {
         const msg = error.response.data.message;

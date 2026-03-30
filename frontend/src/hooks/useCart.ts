@@ -18,14 +18,14 @@ export const useCart = (product: Product) => {
       productId: item.productId._id,
       quantity: item.quantity,
     }));
-    await axios.put(
+
+    // update backend api, get the updated cart
+    const res = await axios.put(
       `${import.meta.env.VITE_API_URL}/api/carts`,
       { items: toBackend },
       { headers: { Authorization: `Bearer ${token}` } },
     );
-    const res = await axios.get(`${import.meta.env.VITE_API_URL}/api/carts`, {
-      headers: { Authorization: `Bearer ${token}` },
-    });
+
     dispatch(setCart(res.data.cart.items));
   };
 
@@ -42,7 +42,7 @@ export const useCart = (product: Product) => {
       },
     ];
     try {
-      updateCart(newItems);
+      await updateCart(newItems);
     } catch (err) {
       console.error(err);
     }
@@ -56,7 +56,7 @@ export const useCart = (product: Product) => {
         : item,
     );
     try {
-      updateCart(newItems);
+      await updateCart(newItems);
     } catch (err) {
       console.error(err);
     }
@@ -72,7 +72,7 @@ export const useCart = (product: Product) => {
       )
       .filter((item) => item.quantity > 0);
     try {
-      updateCart(newItems);
+      await updateCart(newItems);
     } catch (err) {
       console.error(err);
     }
@@ -82,7 +82,7 @@ export const useCart = (product: Product) => {
     if (!token) return;
     const newItems = items.filter((item) => item.productId._id !== product._id);
     try {
-      updateCart(newItems);
+      await updateCart(newItems);
     } catch (err) {
       console.error(err);
     }

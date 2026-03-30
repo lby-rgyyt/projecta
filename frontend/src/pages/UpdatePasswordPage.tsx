@@ -4,6 +4,7 @@ import type { SubmitEvent } from "react";
 
 import { MdOutlineMarkEmailRead } from "react-icons/md";
 import "../styles/SignInSignUp.css";
+import axios from "axios";
 
 const UpdatePasswordPage = () => {
   const [email, setEmail] = useState("");
@@ -12,6 +13,17 @@ const UpdatePasswordPage = () => {
   const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
     setSubmitted(true);
+    try {
+      const response = await axios.post(
+        `${import.meta.env.VITE_API_URL}/api/users/send-reset-email`,
+        {
+          email,
+        },
+      );
+      console.log(response.data);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   return (

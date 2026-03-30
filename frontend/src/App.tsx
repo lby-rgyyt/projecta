@@ -9,6 +9,7 @@ import EditProductPage from "./pages/EditProductPage";
 import NotFoundPage from "./pages/NotFoundPage";
 import ProductListPage from "./pages/ProductListPage";
 import ProductDetailPage from "./pages/ProductDetailPage";
+import ResetPasswordPage from "./pages/ResetPasswordPage";
 
 function App() {
   return (
@@ -19,6 +20,7 @@ function App() {
           <Route path="/signin" element={<SignInPage />} />
           <Route path="/signup" element={<SignUpPage />} />
           <Route path="/profile/password" element={<UpdatePasswordPage />} />
+          <Route path="/profile/reset-password/:token" element={<ResetPasswordPage />} />
           <Route path="/products/create" element={<CreateProductPage />} />
           <Route path="/products/edit/:id" element={<EditProductPage />} />
           <Route path="/products" element={<ProductListPage />} />

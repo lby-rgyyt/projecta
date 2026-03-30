@@ -10,7 +10,7 @@ export const createProduct = async (
   try {
     const { name, description, price, category, inventory, image } = req.body;
 
-    // temp
+    // temperatory
     const sku = `SKU-${Date.now()}`;
 
     const createdBy = new mongoose.Types.ObjectId(req.user!.id);
@@ -24,7 +24,7 @@ export const createProduct = async (
       image,
       createdBy,
     });
-    res.status(201).json({ success: true, data: product });
+    res.status(201).json({ success: true, product: product });
   } catch (err) {
     const mongoError = err as { code?: number };
     if (mongoError.code === 11000) {
@@ -101,10 +101,10 @@ export const updateProduct = async (
     }
 
     // only creator can edit
-    if (product.createdBy.toString() !== req.user!.id) {
-      res.status(403).json({ success: false, message: "Not authorized" });
-      return;
-    }
+    // if (product.createdBy.toString() !== req.user!.id) {
+    //   res.status(403).json({ success: false, message: "Not authorized" });
+    //   return;
+    // }
     const { name, description, price, category, inventory, image, sku } =
       req.body;
     const updates = Object.fromEntries(
@@ -139,10 +139,10 @@ export const deleteProduct = async (
       return;
     }
     // only creator can delete
-    if (product.createdBy.toString() !== req.user!.id) {
-      res.status(403).json({ success: false, message: "Not authorized" });
-      return;
-    }
+    // if (product.createdBy.toString() !== req.user!.id) {
+    //   res.status(403).json({ success: false, message: "Not authorized" });
+    //   return;
+    // }
     await product.deleteOne();
     res.status(200).json({ success: true, message: "Product deleted" });
   } catch (err) {

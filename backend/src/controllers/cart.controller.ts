@@ -33,12 +33,12 @@ export const updateCart = async (
     const filteredItems = items.filter(
       (item: { productId: string; quantity: number }) => item.quantity > 0,
     );
-    const cart = await Cart.findOneAndUpdate(
+    const updatedCart = await Cart.findOneAndUpdate(
       { userId },
       { items: filteredItems },
       { upsert: true, new: true },
-    );
-    res.status(200).json({ success: true, cart: cart });
+    ).populate("items.productId");
+    res.status(200).json({ success: true, cart: updatedCart });
   } catch (err) {
     next(err);
   }
