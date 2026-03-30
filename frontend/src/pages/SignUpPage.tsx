@@ -23,7 +23,7 @@ const SignUpPage = () => {
     } else {
       setEmailError("");
     }
-    if (!password || password.length < 6) {
+    if (!password) {
       setPasswordError("Invalid password input!");
       valid = false;
     } else {

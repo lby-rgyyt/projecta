@@ -12,6 +12,8 @@ const SignInPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
   const token = useSelector((state: RootState) => state.auth.token);
   const navigate = useNavigate();
@@ -23,8 +25,26 @@ const SignInPage = () => {
     }
   }, [token, navigate]);
 
+  const validate = () => {
+    let valid = true;
+    setEmailError("");
+    setPasswordError("");
+
+    if (!email || !/\S+@\S+\.\S+/.test(email)) {
+      setEmailError("Invalid Email input!");
+      valid = false;
+    }
+    if (!password) {
+      setPasswordError("Password is required");
+      valid = false;
+    }
+    return valid;
+  };
+
   const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
+    if (!validate()) return;
+
     try {
       const response = await axios.post(
         `${import.meta.env.VITE_API_URL}/api/auth/login`,
@@ -41,7 +61,18 @@ const SignInPage = () => {
       );
       console.log(response.data);
     } catch (error) {
-      console.error(error);
+      if (axios.isAxiosError(error) && error.response) {
+        const msg = error.response.data.message;
+        if (msg === "User not existed") {
+          setEmailError(msg);
+        } else if (msg === "Invalid password") {
+          setPasswordError(msg);
+        } else {
+          setEmailError(msg);
+        }
+      } else {
+        console.error(error);
+      }
     }
   };
 
@@ -55,9 +86,11 @@ const SignInPage = () => {
             <input
               type="text"
               value={email}
+              className={emailError ? "input-error" : ""}
               onChange={(e) => setEmail(e.target.value)}
               placeholder="you@example.com"
             />
+            {emailError && <span className="error-msg">{emailError}</span>}
           </div>
           <div className="form-group">
             <label>Password</label>
@@ -65,6 +98,7 @@ const SignInPage = () => {
               <input
                 type={showPassword ? "text" : "password"}
                 value={password}
+                className={passwordError ? "input-error" : ""}
                 onChange={(e) => setPassword(e.target.value)}
                 placeholder="Password"
               />
@@ -76,6 +110,9 @@ const SignInPage = () => {
                 {showPassword ? "Hide" : "Show"}
               </button>
             </div>
+            {passwordError && (
+              <span className="error-msg">{passwordError}</span>
+            )}
           </div>
           <button type="submit" className="signin-btn">
             Sign In
