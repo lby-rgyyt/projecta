@@ -1,5 +1,6 @@
 import { useSelector, useDispatch } from "react-redux";
 import { signout } from "../store/slices/authSlice";
+import { clearCart } from "../store/slices/cartSlice";
 import { useNavigate, Link } from "react-router-dom";
 import { useState } from "react";
 import type { RootState } from "../store";
@@ -22,6 +23,7 @@ const Header = () => {
   const totalPrice = useSelector(selectTotalPrice);
 
   const handleSignOut = () => {
+    dispatch(clearCart());
     dispatch(signout());
     navigate("/signin");
   };

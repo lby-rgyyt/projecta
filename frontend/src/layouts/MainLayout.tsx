@@ -5,13 +5,16 @@ import { useEffect } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import axios from "axios";
 import type { RootState } from "../store";
-import { setCart } from "../store/slices/cartSlice";
+import { setCart,clearCart } from "../store/slices/cartSlice";
 
 const MainLayout = () => {
   const token = useSelector((state: RootState) => state.auth.token);
   const dispatch = useDispatch();
   useEffect(() => {
-    if (!token) return;
+    if (!token) {
+      dispatch(clearCart());
+      return;
+    }
     const fetchCart = async () => {
       try {
         const res = await axios.get(

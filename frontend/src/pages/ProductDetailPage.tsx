@@ -10,20 +10,20 @@ import "../styles/ProductDetail.css";
 
 const ProductDetailPage = () => {
   const { id } = useParams();
-  const [product, setProduct] = useState<Product | null>(null);
+  const [product, setProduct] = useState<Product>();
 
   const [error, setError] = useState("");
 
   const { cartItem, handleAdd, handleIncrease, handleDecrease } = useCart(
     product ?? {
-      _id: "",
-      name: "",
-      price: 0,
-      image: [],
-      description: "",
-      category: "",
-      inventory: 0,
-    },
+        _id: "",
+        name: "",
+        price: 0,
+        image: [],
+        description: "",
+        category: "",
+        inventory: 0,
+      },
   );
 
   const role = useSelector((state: RootState) => state.auth.user?.role);

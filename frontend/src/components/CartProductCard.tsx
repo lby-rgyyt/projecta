@@ -11,6 +11,8 @@ interface Props {
 const CartProductCard = ({ product }: Props) => {
   const { cartItem, handleRemove, handleIncrease, handleDecrease } =
     useCart(product);
+
+  if (!cartItem) return;
   return (
     <div className="cart-item">
       <Link className="cart-item-image" to={`/products/${product._id}`}>
@@ -28,7 +30,7 @@ const CartProductCard = ({ product }: Props) => {
         <div className="cart-item-bottom">
           <div className="cart-item-qty">
             <button onClick={() => handleDecrease()}>–</button>
-            <span>{cartItem!.quantity}</span>
+            <span>{cartItem.quantity}</span>
             <button onClick={() => handleIncrease()}>+</button>
           </div>
           <button className="cart-item-remove" onClick={() => handleRemove()}>
