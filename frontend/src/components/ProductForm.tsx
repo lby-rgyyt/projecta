@@ -21,11 +21,13 @@ const ProductForm = ({
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [category, setCategory] = useState("");
-  const [price, setPrice] = useState(0);
+  const [price, setPrice] = useState("");
   const [inventory, setInventory] = useState(0);
   const [imageUrl, setImageUrl] = useState("");
 
   const [previewUrl, setPreviewUrl] = useState("");
+
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
   useEffect(() => {
     const fetchProduct = async () => {
@@ -52,20 +54,21 @@ const ProductForm = ({
     fetchProduct();
   }, [mode, id]);
 
+  const validate = () => {
+    const newErrors: Record<string, string> = {};
+    if (!name.trim()) newErrors.name = "Product name is required";
+    if (!description.trim()) newErrors.description = "Product description is required";
+    if (price === "" || Number(price) < 0 || isNaN(Number(price))) newErrors.price = "Price must be a number and at least 0";
+    if (Number(inventory) < 0)
+      newErrors.inventory = "Inventory must be at least 0";
+    if (!imageUrl.trim()) newErrors.imageUrl = "Image link is required";
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
   const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if (Number(price) < 0) {
-      alert("Price must be at least 0");
-      return;
-    }
-    if (Number(inventory) < 0) {
-      alert("Inventory must be at least 0");
-      return;
-    }
-    if (!name.trim()) {
-      alert("Product name is required");
-      return;
-    }
+    if(!validate()) return;
     console.log({ name, description, category, price, inventory, imageUrl });
     const payload = {
       name: name.trim(),
@@ -115,15 +118,19 @@ const ProductForm = ({
           <input
             type="text"
             value={name}
+            className={errors.name ? "input-error" : ""}
             onChange={(e) => setName(e.target.value)}
           />
+          {errors.name && <span className="error-msg">{errors.name}</span>}
         </div>
         <div className="form-group">
           <label>Product Description</label>
           <textarea
             value={description}
+            className={errors.description ? "input-error" : ""}
             onChange={(e) => setDescription(e.target.value)}
           />
+          {errors.description && <span className="error-msg">{errors.description}</span>}
         </div>
         <div className="form-row">
           <div className="form-group">
@@ -141,9 +148,12 @@ const ProductForm = ({
             <input
               type="number"
               min={0}
+              step="0.01"
               value={price}
-              onChange={(e) => setPrice(Number(e.target.value))}
+              className={errors.price ? "input-error" : ""}
+              onChange={(e) => setPrice(e.target.value)}
             />
+            {errors.price && <span className="error-msg">{errors.price}</span>}
           </div>
         </div>
         <div className="form-row">
@@ -153,8 +163,12 @@ const ProductForm = ({
               type="number"
               min={0}
               value={inventory}
+              className={errors.inventory ? "input-error" : ""}
               onChange={(e) => setInventory(Number(e.target.value))}
             />
+            {errors.inventory && (
+              <span className="error-msg">{errors.inventory}</span>
+            )}
           </div>
           <div className="form-group form-group-image">
             <label>Add Image Link</label>
@@ -162,6 +176,7 @@ const ProductForm = ({
               <input
                 type="text"
                 value={imageUrl}
+                className={errors.imageUrl ? "input-error" : ""}
                 onChange={(e) => setImageUrl(e.target.value)}
                 placeholder="http://"
               />
@@ -173,6 +188,9 @@ const ProductForm = ({
                 Upload
               </button>
             </div>
+            {errors.imageUrl && (
+              <span className="error-msg">{errors.imageUrl}</span>
+            )}
           </div>
         </div>
         <div className="image-preview">
