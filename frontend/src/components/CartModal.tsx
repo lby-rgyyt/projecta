@@ -9,17 +9,17 @@ const CartModal = ({ onClose }: { onClose: () => void }) => {
   const [discount, setDiscount] = useState(0);
 
   const taxRate = 0;
-//   const [taxRate, setTaxRate] = useState(0);
+  //   const [taxRate, setTaxRate] = useState(0);
   const items = useSelector((state: RootState) => state.cart.items);
 
   const subtotal = useSelector(selectTotalPrice);
   const afterDiscount = subtotal - discount;
   const tax = afterDiscount * taxRate;
-  const estimatedTotal = (subtotal - discount) * (1 + taxRate);
+  const estimatedTotal = Math.max(0, (subtotal - discount) * (1 + taxRate));
 
   const handleClickApply = async () => {
     // fetch and validate discountCode
-    // const res = await axios 
+    // const res = await axios
 
     setDiscount(100);
     console.log("Click Apply");
@@ -33,12 +33,19 @@ const CartModal = ({ onClose }: { onClose: () => void }) => {
     <div className="cart-overlay" onClick={onClose}>
       <div className="cart-panel" onClick={(e) => e.stopPropagation()}>
         <div className="cart-header">
-          <h2>Cart <span className="cart-count">({items.length})</span></h2>
-          <button className="cart-close" onClick={onClose}>&times;</button>
+          <h2>
+            Cart <span className="cart-count">({items.length})</span>
+          </h2>
+          <button className="cart-close" onClick={onClose}>
+            &times;
+          </button>
         </div>
         <div className="cart-items">
           {items.map((item) => (
-            <CartProductCard key={item.productId._id} product={item.productId} />
+            <CartProductCard
+              key={item.productId._id}
+              product={item.productId}
+            />
           ))}
         </div>
         <div className="cart-discount">
@@ -50,7 +57,9 @@ const CartModal = ({ onClose }: { onClose: () => void }) => {
               onChange={(e) => setDiscountCode(e.target.value)}
               placeholder="20 DOLLAR OFF"
             />
-            <button className="cart-apply-btn" onClick={handleClickApply}>Apply</button>
+            <button className="cart-apply-btn" onClick={handleClickApply}>
+              Apply
+            </button>
           </div>
         </div>
         <div className="cart-summary">
@@ -65,12 +74,14 @@ const CartModal = ({ onClose }: { onClose: () => void }) => {
           <div className="cart-summary-row">
             <span>Tax</span>
             <span>${tax.toFixed(2)}</span>
-          </div>  
+          </div>
           <div className="cart-summary-row cart-total">
             <span>Estimated total</span>
             <span>${estimatedTotal.toFixed(2)}</span>
           </div>
-          <button className="cart-checkout-btn" onClick={handleClickCheckout}>Continue to checkout</button>
+          <button className="cart-checkout-btn" onClick={handleClickCheckout}>
+            Continue to checkout
+          </button>
         </div>
       </div>
     </div>

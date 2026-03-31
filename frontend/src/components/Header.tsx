@@ -8,9 +8,9 @@ import { selectTotalPrice } from "../store";
 import CartModal from "./CartModal";
 
 import "../styles/Header.css";
-import { LuCircleUser } from "react-icons/lu"; // 人物图标
-import { FiShoppingCart } from "react-icons/fi"; // 购物车图标
-import { FaStar } from "react-icons/fa"; // 黄色星星
+import { LuCircleUser } from "react-icons/lu";
+import { FiShoppingCart } from "react-icons/fi";
+import { FaStar } from "react-icons/fa";
 
 const Header = () => {
   const token = useSelector((state: RootState) => state.auth.token);

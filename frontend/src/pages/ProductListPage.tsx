@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
 import ProductCard from "../components/ProductCard";
+import { useSearchParams } from "react-router-dom";
 import axios from "axios";
 import type { Product } from "../types";
 
@@ -8,9 +9,11 @@ import "../styles/ProductList.css";
 
 const ProductListPage = () => {
   const [products, setProducts] = useState<Product[]>([]);
-  const [currentPage, setCurrentPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
-  const [sortBy, setSortBy] = useState("latest");
+
+  const [searchParams, setSearchParams] = useSearchParams();
+  const currentPage = Number(searchParams.get("page")) || 1;
+  const sortBy = searchParams.get("sort") || "latest";
 
   const [error, setError] = useState("");
 
@@ -43,10 +46,7 @@ const ProductListPage = () => {
           <select
             className="list-sort"
             value={sortBy}
-            onChange={(e) => {
-              setSortBy(e.target.value);
-              setCurrentPage(1);
-            }}
+            onChange={(e) => setSearchParams({ page: "1", sort: e.target.value })}
           >
             <option value="latest">Last added</option>
             <option value="price_asc">Price: low to high</option>
@@ -64,7 +64,7 @@ const ProductListPage = () => {
       </div>
       <div className="pagination">
         <button
-          onClick={() => setCurrentPage((p) => p - 1)}
+          onClick={() => setSearchParams({ page: String(currentPage - 1), sort: sortBy })}
           disabled={currentPage === 1}
         >
           «
@@ -73,13 +73,13 @@ const ProductListPage = () => {
           <button
             key={page}
             className={page === currentPage ? "active" : ""}
-            onClick={() => setCurrentPage(page)}
+            onClick={() => setSearchParams({ page: String(page), sort: sortBy })}
           >
             {page}
           </button>
         ))}
         <button
-          onClick={() => setCurrentPage((p) => p + 1)}
+          onClick={() => setSearchParams({ page: String(currentPage + 1), sort: sortBy })}
           disabled={currentPage === totalPages}
         >
           »
