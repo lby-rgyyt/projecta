@@ -54,7 +54,7 @@ const SignUpPage = () => {
           setEmailError(msg || "Registration failed");
         }
       } else {
-        console.error(error);
+        alert("Network error, please try again");
       }
     }
   };

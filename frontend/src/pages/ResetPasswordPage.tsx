@@ -29,7 +29,11 @@ const ResetPasswordPage = () => {
       alert("Password reset successfully");
       navigate("/signin");
     } catch (err) {
-      console.log(err);
+      if (axios.isAxiosError(err) && err.response) {
+        alert(err.response.data.message);
+      } else {
+        alert("Failed to reset password");
+      }
     }
   };
 

@@ -11,6 +11,9 @@ import "../styles/ProductDetail.css";
 const ProductDetailPage = () => {
   const { id } = useParams();
   const [product, setProduct] = useState<Product | null>(null);
+
+  const [error, setError] = useState("");
+
   const { cartItem, handleAdd, handleIncrease, handleDecrease } = useCart(
     product ?? {
       _id: "",
@@ -33,13 +36,18 @@ const ProductDetailPage = () => {
         );
         setProduct(res.data.product);
       } catch (err) {
-        console.log(err);
+        if (axios.isAxiosError(err) && err.response) {
+          setError(err.response.data.message);
+        } else {
+          setError("Failed to load product");
+        }
       }
     };
 
     fetchProdcut();
   }, [id]);
 
+  if (error) return <p>{error}</p>;
   if (!product) return <p>Loading...</p>;
 
   return (
@@ -61,7 +69,9 @@ const ProductDetailPage = () => {
             {product.inventory === 0 ? (
               <span className="detail-stock out">Out of Stock</span>
             ) : (
-              <span className="detail-stock in">In Stock: {product.inventory}</span>
+              <span className="detail-stock in">
+                In Stock: {product.inventory}
+              </span>
             )}
           </div>
           <p className="detail-description">{product.description}</p>
@@ -73,10 +83,17 @@ const ProductDetailPage = () => {
                 <button onClick={() => handleIncrease()}>+</button>
               </div>
             ) : (
-              <button className="detail-add-btn" onClick={() => handleAdd()}>Add To Cart</button>
+              <button className="detail-add-btn" onClick={() => handleAdd()}>
+                Add To Cart
+              </button>
             )}
             {role === "vendor" && (
-              <Link className="detail-edit-btn" to={`/products/edit/${product._id}`}>Edit</Link>
+              <Link
+                className="detail-edit-btn"
+                to={`/products/edit/${product._id}`}
+              >
+                Edit
+              </Link>
             )}
           </div>
         </div>

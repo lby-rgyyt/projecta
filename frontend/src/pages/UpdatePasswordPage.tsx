@@ -21,8 +21,12 @@ const UpdatePasswordPage = () => {
         },
       );
       console.log(response.data);
-    } catch (error) {
-      console.log(error);
+    } catch (err) {
+      if (axios.isAxiosError(err) && err.response) {
+        alert(err.response.data.message);
+      } else {
+        alert("Failed to update password");
+      }
     }
   };
 

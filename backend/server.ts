@@ -24,6 +24,12 @@ app.use("/api/users", userRouter);
 app.use("/api/products", productRouter);
 app.use("/api/carts",cartRouter);
 
+app.use((err: Error, req: express.Request, res: express.Response, next: express.NextFunction) => {
+  console.error(err);
+  res.status(500).json({ success: false, message: err.message || "Internal server error" });
+});
+
+
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });

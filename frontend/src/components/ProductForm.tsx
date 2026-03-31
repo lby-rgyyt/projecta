@@ -44,8 +44,12 @@ const ProductForm = ({
         const firstImage = p.image?.[0] ?? "";
         setImageUrl(firstImage);
         setPreviewUrl(firstImage);
-      } catch (err) {
-        console.log(err);
+      } catch (error) {
+        if (axios.isAxiosError(error) && error.response) {
+          alert(error.response.data.message);
+        } else {
+          alert("Network error, please try again");
+        }
       }
     };
     if (mode !== "edit" || !id) {
@@ -57,8 +61,10 @@ const ProductForm = ({
   const validate = () => {
     const newErrors: Record<string, string> = {};
     if (!name.trim()) newErrors.name = "Product name is required";
-    if (!description.trim()) newErrors.description = "Product description is required";
-    if (price === "" || Number(price) < 0 || isNaN(Number(price))) newErrors.price = "Price must be a number and at least 0";
+    if (!description.trim())
+      newErrors.description = "Product description is required";
+    if (price === "" || Number(price) < 0 || isNaN(Number(price)))
+      newErrors.price = "Price must be a number and at least 0";
     if (Number(inventory) < 0)
       newErrors.inventory = "Inventory must be at least 0";
     if (!imageUrl.trim()) newErrors.imageUrl = "Image link is required";
@@ -68,7 +74,7 @@ const ProductForm = ({
 
   const handleSubmit = async (e: SubmitEvent<HTMLFormElement>) => {
     e.preventDefault();
-    if(!validate()) return;
+    if (!validate()) return;
     console.log({ name, description, category, price, inventory, imageUrl });
     const payload = {
       name: name.trim(),
@@ -96,7 +102,11 @@ const ProductForm = ({
         navigate(`/products/${id}`);
       }
     } catch (err) {
-      console.error(err);
+      if (axios.isAxiosError(err) && err.response) {
+        alert(err.response.data.message);
+      } else {
+        alert("Failed to save product");
+      }
     }
   };
 
@@ -130,7 +140,9 @@ const ProductForm = ({
             className={errors.description ? "input-error" : ""}
             onChange={(e) => setDescription(e.target.value)}
           />
-          {errors.description && <span className="error-msg">{errors.description}</span>}
+          {errors.description && (
+            <span className="error-msg">{errors.description}</span>
+          )}
         </div>
         <div className="form-row">
           <div className="form-group">

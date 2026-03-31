@@ -71,7 +71,7 @@ const SignInPage = () => {
           setEmailError(msg);
         }
       } else {
-        console.error(error);
+        alert("Network error, please try again");
       }
     }
   };

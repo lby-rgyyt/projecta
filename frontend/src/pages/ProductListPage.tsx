@@ -12,6 +12,8 @@ const ProductListPage = () => {
   const [totalPages, setTotalPages] = useState(1);
   const [sortBy, setSortBy] = useState("latest");
 
+  const [error, setError] = useState("");
+
   useEffect(() => {
     const fecthProducts = async () => {
       try {
@@ -21,11 +23,17 @@ const ProductListPage = () => {
         setProducts(res.data.products);
         setTotalPages(res.data.totalPages);
       } catch (err) {
-        console.log(err);
+        if (axios.isAxiosError(err) && err.response) {
+          setError(err.response.data.message);
+        } else {
+          setError("Failed to load products");
+        }
       }
     };
     fecthProducts();
   }, [currentPage, sortBy]);
+
+  if (error) return <p>{error}</p>;
 
   return (
     <div className="list-page">

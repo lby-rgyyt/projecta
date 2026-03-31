@@ -28,7 +28,7 @@ export const createProduct = async (
   } catch (err) {
     const mongoError = err as { code?: number };
     if (mongoError.code === 11000) {
-      res.status(409).json({ success: false, message: "SKU already exists" });
+      res.status(409).json({ success: false, message: "Product already exists" });
       return;
     }
     next(err);
