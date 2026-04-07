@@ -4,6 +4,8 @@ import ProductCard from "../components/ProductCard";
 import { useSearchParams } from "react-router-dom";
 import axios from "axios";
 import type { Product } from "../types";
+import { useSelector } from "react-redux";
+import type { RootState } from "../store";
 
 import "../styles/ProductList.css";
 
@@ -16,6 +18,8 @@ const ProductListPage = () => {
   const sortBy = searchParams.get("sort") || "latest";
 
   const [error, setError] = useState("");
+
+  const role = useSelector((state: RootState) => state.auth.user?.role);
 
   useEffect(() => {
     const fecthProducts = async () => {
@@ -46,15 +50,19 @@ const ProductListPage = () => {
           <select
             className="list-sort"
             value={sortBy}
-            onChange={(e) => setSearchParams({ page: "1", sort: e.target.value })}
+            onChange={(e) =>
+              setSearchParams({ page: "1", sort: e.target.value })
+            }
           >
             <option value="latest">Last added</option>
             <option value="price_asc">Price: low to high</option>
             <option value="price_desc">Price: high to low</option>
           </select>
-          <Link className="list-add-btn" to="/products/create">
-            Add Product
-          </Link>
+          {role === "vendor" && (
+            <Link className="list-add-btn" to="/products/create">
+              Add Product
+            </Link>
+          )}
         </div>
       </div>
       <div className="product-grid">
@@ -64,7 +72,9 @@ const ProductListPage = () => {
       </div>
       <div className="pagination">
         <button
-          onClick={() => setSearchParams({ page: String(currentPage - 1), sort: sortBy })}
+          onClick={() =>
+            setSearchParams({ page: String(currentPage - 1), sort: sortBy })
+          }
           disabled={currentPage === 1}
         >
           «
@@ -73,13 +83,17 @@ const ProductListPage = () => {
           <button
             key={page}
             className={page === currentPage ? "active" : ""}
-            onClick={() => setSearchParams({ page: String(page), sort: sortBy })}
+            onClick={() =>
+              setSearchParams({ page: String(page), sort: sortBy })
+            }
           >
             {page}
           </button>
         ))}
         <button
-          onClick={() => setSearchParams({ page: String(currentPage + 1), sort: sortBy })}
+          onClick={() =>
+            setSearchParams({ page: String(currentPage + 1), sort: sortBy })
+          }
           disabled={currentPage === totalPages}
         >
           »
