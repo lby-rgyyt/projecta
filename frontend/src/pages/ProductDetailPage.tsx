@@ -39,6 +39,7 @@ const ProductDetailPage = () => {
         if (axios.isAxiosError(err) && err.response) {
           setError(err.response.data.message);
         } else {
+          alert("Failed to load product");
           setError("Failed to load product");
         }
       }
